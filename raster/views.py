@@ -12,7 +12,7 @@ from PIL import Image
 
 from django.conf import settings
 from django.contrib.gis.gdal import GDALRaster
-from django.contrib.gis.gdal.raster.const import VSI_FILESYSTEM_BASE_PATH
+from django.contrib.gis.gdal.raster.const import VSI_MEM_FILESYSTEM_BASE_PATH
 from django.contrib.gis.geos import Polygon
 from django.db.models import Max, Q
 from django.http import FileResponse, Http404, HttpResponse
@@ -293,7 +293,7 @@ class AlgebraView(RasterView):
 
         # For tif requests, skip colormap and return georeferenced tif file.
         if self.kwargs.get('frmt') == 'tif':
-            vsi_path = os.path.join(VSI_FILESYSTEM_BASE_PATH, str(uuid.uuid4()))
+            vsi_path = os.path.join(VSI_MEM_FILESYSTEM_BASE_PATH, str(uuid.uuid4()))
             rast = result.warp({
                 'name': vsi_path,
                 'driver': 'tif',
@@ -365,7 +365,7 @@ class AlgebraView(RasterView):
 
         # For tif requests, skip rgb rendering and return georeferenced tif file.
         if self.kwargs.get('frmt') == 'tif':
-            vsi_path = os.path.join(VSI_FILESYSTEM_BASE_PATH, str(uuid.uuid4()))
+            vsi_path = os.path.join(VSI_MEM_FILESYSTEM_BASE_PATH, str(uuid.uuid4()))
             # Construct 3 band raster, assuming all
             ref = next(iter(data.values()))
             result = GDALRaster({
